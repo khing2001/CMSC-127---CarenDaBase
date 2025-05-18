@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Ingredient</title>
+</head>
+<body>
+  <h2>Add New Ingredient</h2>
+  <form id="ingredientForm">
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type" required><br><br>
+
+    <label for="unit">Unit:</label>
+    <input type="text" id="unit" name="unit" required><br><br>
+
+    <button type="submit">Add Ingredient</button>
+  </form>
+
+  <p id="response"></p>
+
+  <script>
+    document.getElementById('ingredientForm').addEventListener('submit', async function (esd) {
+      esd.preventDefault();
+      const data = {
+        IngredientName: document.getElementById('name').value,
+        IngredientType: document.getElementById('type').value,
+        Unit: document.getElementById('unit').value
+      };
+      const response = await fetch('/ingredients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      document.getElementById('response').innerText = result.message || result.error;
+    });
+  </script>
+</body>
+</html>
