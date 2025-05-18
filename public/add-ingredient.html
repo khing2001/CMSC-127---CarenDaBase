@@ -20,6 +20,9 @@
     <button type="submit">Add Ingredient</button>
   </form>
 
+  <h1>Ingredient List</h1>
+  <ul id="ingredient-list"></ul>
+
   <p id="response"></p>
 
   <script>
@@ -37,7 +40,37 @@
       });
       const result = await response.json();
       document.getElementById('response').innerText = result.message || result.error;
+      
+      // clearing form inputs
+      document.getElementById('ingredientForm').reset();
+
+      //referesh ingredient list
+      fetch('/ingredients')
+        .then (response => response.json())
+        .then(data => {
+          const list = document.getElementById('ingredient-list');
+          list.innerHTML = '';
+          data.forEach(ingredient => {
+            const li = document.createElement('li');
+            li.textContent = `Name: ${ingredient.IngredientName} - Type ${ingredient.IngredientType} Unit: (${ingredient.Unit})`;
+            list.appendChild(li);
+          });
+        })
     });
+
+    //load ingredients on page load
+    window.onload = () => {
+      fetch('/ingredients')
+        .then(response => response.json())
+        .then(data => {
+          const list = document.getElementById('ingredient-list');
+          data.forEach(ingredient => {
+            const li = document.createElement('li');
+            li.textContent = `Name: ${ingredient.IngredientName} - Type: ${ingredient.IngredientType} - Unit: (${ingredient.Unit})`;
+            list.appendChild(li);
+          });
+        });
+    };
   </script>
 </body>
 </html>
